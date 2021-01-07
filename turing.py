@@ -10,19 +10,19 @@ class TuringMachine():
         self.behaviour = behaviour
         self.tape = [' ']
         self.pos = 0
-        self.config = 'b'
+        self.m_config = 'b'
 
     def step(self):
-        key = (self.config, self.tape[self.pos])
+        config = (self.m_config, self.tape[self.pos])
         try:
-            actions, next_config = self.behaviour[key]
+            actions, next_m_config = self.behaviour[config]
         except KeyError:
             if self.tape[self.pos] == ' ':
                 raise KeyError
-            actions, next_config = self.behaviour[(key[0], 'Any')]
+            actions, next_m_config = self.behaviour[(config[0], 'Any')]
         for action in actions:
             self.act(action)
-        self.config = next_config
+        self.m_config = next_m_config
 
     def extend_tape(self):
         while self.pos >= len(self.tape):
