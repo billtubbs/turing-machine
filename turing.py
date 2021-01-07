@@ -7,10 +7,10 @@ class TuringMachine():
     """Simulation of a Turing machine"""
 
     def __init__(self, behaviour):
+        self.behaviour = behaviour
         self.tape = [' ']
         self.pos = 0
         self.config = 'b'
-        self.behaviour = behaviour
 
     def step(self):
         key = (self.config, self.tape[self.pos])
@@ -25,8 +25,8 @@ class TuringMachine():
         self.config = next_config
 
     def extend_tape(self):
-            while self.pos >= len(self.tape):
-                self.tape.append(' ')
+        while self.pos >= len(self.tape):
+            self.tape.append(' ')
 
     def act(self, action):
         if action == 'L':
@@ -45,11 +45,11 @@ class TuringMachine():
             raise ValueError("unrecognized action")
 
     def compute(self, n_digits):
-        while len(self.tape) < (n_digits*2) + 1:
+        while len(self.tape) < n_digits + 1:
             self.step()
         # Return every second value on the tape which 
         # should all be binary digits
-        return ''.join([b for b in self.tape[0:-1]])
+        return ''.join([b for b in self.tape[0:n_digits]])
 
 
 # Machine to compute 1/3
@@ -60,8 +60,9 @@ behaviour1 = {
     ('b', '1'): (['R', 'R', 'P0'], 'b'),
 }
 machine = TuringMachine(behaviour1)
-out = machine.compute(10)
-print(out)
+out = machine.compute(19)
+assert len(out) == 19
+assert out == '0 1 0 1 0 1 0 1 0 1'
 
 # Machine to compute '001011011101111011111...'
 # (This is the 2nd machine described in Turing's paper)
@@ -78,5 +79,6 @@ behaviour2 = {
     ('f', ' '): (['P0', 'L', 'L'], 'v')
 }
 machine = TuringMachine(behaviour2)
-out = machine.compute(22)
-print(out)
+out = machine.compute(43)
+assert len(out) == 43
+assert out == 'ee0 0 1 0 1 1 0 1 1 1 0 1 1 1 1 0 1 1 1 1 1'
